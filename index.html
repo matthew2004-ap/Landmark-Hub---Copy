@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landmark Hub | Eat, Enjoy and Live Healthy </title>
+    <!-- React and ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel for on-the-fly transformation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; background: #0A2E1C; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script>
+        // Mock window.storage for the app to work
+        window.storage = {
+            get: async (key, isJson) => {
+                const val = localStorage.getItem(key);
+                return val ? { value: val } : null;
+            },
+            set: async (key, value, isJson) => {
+                localStorage.setItem(key, value);
+                return true;
+            }
+        };
+
+        // Mock import/export for Babel standalone
+        window.React = React;
+        window.ReactDOM = ReactDOM;
+    </script>
+
+    <!-- The JSX code needs some tweaks to run in Babel standalone without a bundler -->
+    <!-- Specifically, we'll remove the import statement and use the global React instead -->
+    <script type="text/babel" data-type="module">
+        import { useState, useEffect, useRef, useCallback } from "react";
+        // Since we're using esm.sh or similar, we can import from CDNs
+    </script>
+
+    <!-- Wait, simpler: let's just fetch the JSX file, remove imports, and evaluate it -->
+    <script type="text/babel">
+        async function loadApp() {
+            const response = await fetch('landmark_cafe_v2.jsx');
+            let code = await response.text();
+            
+            // Remove the import statement from the top
+            code = code.replace(/import\s+\{\s*useState,\s*useEffect,\s*useRef,\s*useCallback\s*\}\s*from\s*"react";/, 
+                                'const { useState, useEffect, useRef, useCallback } = React;');
+            
+            // Create a component from the code
+            // The code ends with "export default function App() { ... }"
+            // We need to make it accessible to render
+            code = code.replace(/export\s+default\s+function\s+App/, 'function App');
+            code += '\nconst root = ReactDOM.createRoot(document.getElementById("root"));\nroot.render(<App />);';
+
+            // Use Babel to transform and run the code
+            const transformed = Babel.transform(code, { presets: ['react'] }).code;
+            const script = document.createElement('script');
+            script.textContent = transformed;
+            document.body.appendChild(script);
+        }
+        loadApp();
+    </script>
+</body>
+</html>
