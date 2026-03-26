@@ -30,7 +30,7 @@ async function askAI(systemPrompt, userMessage) {
 
 // ─── CONSTANTS ───────────────────────────────────────────────────────────────
 const CAFES = ["Cafe 1", "Cafe 2", "Cafe 3", "Back of Cafe"];
-const HOSTELS = ["Joseph Hall","Daniel Hall","Mary Hall","Esther Hall","Peter Hall","Deborah Hall"];
+const HOSTELS = ["Joseph Hall","Daniel Hall","Abigail Hall","Abraham Hall","Sarah  Hall","Deborah Hall","Jacob Hall"];
 const PAYMENT_METHODS = [
   { id: "wallet", label: "LMU Wallet", icon: "💳", desc: "Pay from your campus e-wallet" },
   { id: "transfer", label: "Bank Transfer", icon: "🏦", desc: "Transfer to cafe account" },
